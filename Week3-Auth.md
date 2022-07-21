@@ -152,7 +152,7 @@ Implement a basic fullstack application that can register users and create privi
       * const match = await bcrypt.compare(req.body.password, user.password);
     * Implement functionality at the end of the route to respond with a json object. If the passwords match, then the object should have "success": true; if the passwords do not match, the object should have "success": false.
 
-### Approach - Part 2: Persistant Login
+### Approach - Part 2: Persistent Login
 
 * First, we will add persist login functionality with JSON Web Tokens
 * Second, we will create a new react app for our front-end
@@ -265,7 +265,7 @@ Implement a basic fullstack application that can register users and create privi
     * A new route with the path "/registration" and the element <RegistrationPage />
     * The routes should look similar to this:
     * <Routes>
-        <Route path="/" element={<NavBar />}>
+        <Route path="/" element={<Navbar />}>
           <Route index element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="registration" element={<RegistrationPage />} />
@@ -286,7 +286,7 @@ Implement a basic fullstack application that can register users and create privi
     * const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
   * Add a new exported function registerUser that does the following:
     * It should have two function parameters: username and password
-      * export const registerUser = async (username, password) => {}
+      * export const registerUser = (username, password) => {}
     * In the function body, it should create a POST request to `${urlEndpoint}/auth/register-user` with a JSON.stringified object containing the user's username and password:
       * body: JSON.stringify({
         username,
@@ -329,10 +329,11 @@ Implement a basic fullstack application that can register users and create privi
   * Add two new text input fields and hook them up to username and password (the input fields should set the values for the two state variables)
   * Import the following functions from ./src/Auth.js: registerUser and loginUser
   * Add a button called Signup with the following functionality in the async onClick handler:
+    * The function should call registerUser and pass in the username and password as arguments:
+      * registerUser(username, password)
     * It should call props.setIsAuthLoading(true)
-    * The function should call await registerUser and pass in the username and password as arguments:
-      * const registerResult = await registerUser(username, password);
-    * If registerResult returned true, it should call loginUser with the username and password as arguments
+    * It should await for registerUser to return true
+    * If registerUser returned true, it should call loginUser with the username and password as arguments
     * If loginUser returned true, it should:
       * Call props.setIsAuthLoading(false)
       * Programmatically redirect to "/"
@@ -344,10 +345,11 @@ Implement a basic fullstack application that can register users and create privi
   * Add two new text input fields and hook them up to username and password
   * Import the function loginUser from ./src/Auth.js
   * Add a button called Login with the following functionality in the async onClick handler:
+    * The function should call loginUser and pass in the username and password as arguments:
+      * loginUser(username, password)
     * It should call props.setIsAuthLoading(true)
-    * The function should call await loginUser and pass in the username and password as arguments:
-      * const loginResult = loginUser(username, password)
-    * If loginResult is true, it should:
+    * It should await for loginUser to return true
+    * If loginUser returned true, it should:
       * Call props.setIsAuthLoading(false)
       * Programmatically redirect to "/"
         * const navigate = useNavigate()
@@ -360,45 +362,33 @@ Implement a basic fullstack application that can register users and create privi
     * useEffect(()=>{
       const userToken = getUserToken()
       setUserToken(userToken)
-    }, [props.isAuthLoading])
+    }, [isAuthLoading])
   * Update the return JSX in <NavBar /> to be the following:
     * <div>
-      <nav>
-        <h3>NavBar</h3>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          {!userToken && (
-            <>
+        <nav>
+          <h3>NavBar</h3>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            {!userToken && 
               <li>
                 <Link to="/login">Login</Link>
               </li>
               <li>
                 <Link to="/registration">Registration</Link>
               </li>
-            </>
-          )}
-        </ul>
-        {userToken && (
-          <>
-            <span>
-              <strong>You Are Logged In</strong>
-            </span>
-            <button
-              onClick={() => {
-                props.setIsAuthLoading(true)
-                logoutUser();
-                props.setIsAuthLoading(false)
-              }}
-            >
-              Logout
-            </button>
-          </>
-        )}
-      </nav>
-      <Outlet />
-    </div>
+            }
+          </ul>
+          {userToken && 
+            <span><strong>You Are Logged In</strong></span>
+            <button onClick={()=>{
+              logoutUser()
+            }}>Logout</button>
+          }
+        </nav>
+        <Outlet />
+      </div>
 
 * Note: If all the above was implemented correctly, you should be able to do the entire auth flow from the front end. Register a user, login as that user and logout from that user. You should also see the NavBar update dynamically based upon your login status.
 
