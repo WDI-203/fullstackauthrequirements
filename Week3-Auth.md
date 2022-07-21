@@ -8,10 +8,12 @@ https://www.geeksforgeeks.org/json-web-token-jwt/#:~:text=A%20JSON%20web%20token
 https://www.bezkoder.com/react-hooks-jwt-auth/
 https://medium.com/@byeduardoac/managing-jwt-token-expiration-bfb2bd6ea584
 
-Tokens:
+-> Tokens:
   https://auth0.com/blog/id-token-access-token-what-is-the-difference/
   https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
   https://auth0.com/intro-to-iam/authentication-vs-authorization/
+
+https://datatracker.ietf.org/doc/html/rfc6749#section-1.2
 
 # *Fullstack Auth*
 
