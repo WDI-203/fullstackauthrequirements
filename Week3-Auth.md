@@ -118,12 +118,13 @@ Implement a basic fullstack application that can register users and create privi
     * Add this line of code to connect to the users collection:
       * const collection = await blogsDB().collection("users")
       * Note: You do not have to create the users collection in mongodb before saving to it. Mongo will automatically create the users collection upon insert of a new document.
-    * Implement mongodb functionality to insert() the user into the collection:
+    * Implement mongodb functionality to insertOne() the user into the collection:
       * const user = {
           username: username, 
           password: passwordHash,
           uid: uuid() // uid stands for User ID. This will be a unique string that we will can to identify our user
         }
+      * await collection.insertOne(user);
     * Add a try catch block within your code to return true if the save was successful and false if it was not:
       * try {
         // Save user functionality
@@ -326,7 +327,9 @@ Implement a basic fullstack application that can register users and create privi
 
 * In <RegistrationPage />, implement the following:
   * Add two new state variables: username and password
-  * Add two new text input fields and hook them up to username and password (the input fields should set the values for the two state variables)
+  * Add one input field where the type="text" for the username and hook it up to the state variable
+  * Add one input field where the type="password" for the password and hook it up to the state variable
+    * Note: By setting the type to "password" the input field will obscure the letters from appearing.
   * Import the following functions from ./src/Auth.js: registerUser and loginUser
   * Add a button called Signup with the following functionality in the async onClick handler:
     * It should call props.setIsAuthLoading(true)
@@ -341,7 +344,9 @@ Implement a basic fullstack application that can register users and create privi
 
 * In <LoginPage />, implement the following:
   * Add two new state variables: username and password
-  * Add two new text input fields and hook them up to username and password
+  * Add one input field where the type="text" for the username and hook it up to the state variable
+  * Add one input field where the type="password" for the password and hook it up to the state variable
+    * Note: By setting the type to "password" the input field will obscure the letters from appearing.
   * Import the function loginUser from ./src/Auth.js
   * Add a button called Login with the following functionality in the async onClick handler:
     * It should call props.setIsAuthLoading(true)
@@ -386,10 +391,12 @@ Implement a basic fullstack application that can register users and create privi
               <strong>You Are Logged In</strong>
             </span>
             <button
-              onClick={() => {
+               onClick={async() => {
                 props.setIsAuthLoading(true)
-                logoutUser();
-                props.setIsAuthLoading(false)
+                const logoutSuccess = await logoutUser();
+                if (logoutSuccess) {
+                  props.setIsAuthLoading(false)
+                }
               }}
             >
               Logout
